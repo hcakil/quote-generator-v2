@@ -19,44 +19,38 @@ function removeLoadingSpinner(){
 
 }
 
+// let apiQuotes = [];
 
-// Get Quote From API
-async function getQuote(){
-    showLoadingSpinner();
-    const proxyUrl = 'https://vast-castle-83922.herokuapp.com/' 
-const apiUrl = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
-try {
-    const response = await fetch(proxyUrl + apiUrl);
-    const data = await response.json();
-    var myType = data.type;
+// Show New Quote
 
-    // If Author is blank, add 'Unknown'
-    if(data.quoteAuthor === '')
-    {
-        authorText.innerText = 'Unknown';
-    }
-    else
-    {
-        authorText.innerText = data.quoteAuthor;
-    }
-    // Reduce fontsize for Long Quotes
-    if(data.quoteText.length > 120){
-        quoteText.classList.add('long-quote')
-    }
-    else{
-        quoteText.classList.remove('long-quote')
-    }
-    quoteText.innerText = data.quoteText;
+function newQuote(){
+    // Pick a random Quote from api Quotes array
+    const quote = localQuotes[Math.floor(Math.random() * localQuotes.length )];
 
-    //Stop Loader Show Quote
-    removeLoadingSpinner();
-
-} catch (error) {
-    getQuote();
-    // console.log('hoppaa , no quote',error)
+        // If Author is blank, add 'Unknown'
+        if(!quote.author)
+        {
+            authorText.textContent = 'Unknown';
+        }
+        else
+        {
+            authorText.textContent = quote.author;
+        }
+        
+        
+        // Reduce fontsize for Long Quotes
+        if(quote.text.length > 120){
+        
+            quoteText.classList.add('long-quote')
+        }
+        else{
+            quoteText.classList.remove('long-quote')
+        }
+    
+    quoteText.textContent = quote.text;
+        //Stop Loader Show Quote
+        removeLoadingSpinner();
 }
-}
-
 // Tweeet Quote
 function tweetQuote(){
     const quote = quoteText.innerText;
@@ -66,9 +60,24 @@ function tweetQuote(){
 
 }
 
+
+// Get Quotes From API
+// async function getQuotes(){
+//     const apiUrl = 'https://type.fit/api/quotes';
+//     try {
+//         const response = await fetch(apiUrl);
+//         //turn response to json format
+//         apiQuotes = await response.json();
+//         newQuote();
+//     } catch (error) {
+        
+//         // Cathch Error
+//     }
+// }
+
 // EventListeners
-newQuoteBtn.addEventListener('click',getQuote);
+newQuoteBtn.addEventListener('click',newQuote);
 twitterBtn.addEventListener('click',tweetQuote);
-// On Load
-getQuote();
-// loading();
+// on Load
+// getQuotes();
+newQuote();
